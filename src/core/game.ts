@@ -24,10 +24,11 @@ export class Game {
     const container = new Container();
     this.app.stage.addChild(container);
 
-    // Set up core systems
     this.eventDispatcher = new EventDispatcher();
-    // this.assetManager = new AssetManager();
+    this.assetManager = new AssetManager();
     // this.gameState = new GameState();
+
+    await this.assetManager.loadAllAssets();
   }
 
   reset() {}
