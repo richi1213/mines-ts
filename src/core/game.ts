@@ -2,14 +2,15 @@ import { Application, Container } from 'pixi.js';
 import { GAME_CONFIG } from '@config/game-config';
 import { EventDispatcher } from '@core/event-dispatcher';
 import { AssetManager } from '@game/managers/asset-manager';
+import { GameState } from '@game/entities/game-state';
 
 export class Game {
   private app: Application;
   private assetManager!: AssetManager;
   private eventDispatcher!: EventDispatcher;
+  private gameState!: GameState;
   //   private gameEngine!: GameEngine;
   //   private uiManager!: UIManager;
-  //   private gameState!: GameState;
 
   constructor() {
     this.app = new Application();
@@ -26,7 +27,7 @@ export class Game {
 
     this.eventDispatcher = new EventDispatcher();
     this.assetManager = new AssetManager();
-    // this.gameState = new GameState();
+    this.gameState = new GameState();
 
     await this.assetManager.loadAllAssets();
   }
