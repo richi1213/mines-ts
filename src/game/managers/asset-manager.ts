@@ -8,8 +8,9 @@ export class AssetManager {
       await Assets.loadBundle(bundleName);
     }
   }
-
-  async getTexture(path: string) {
-    return await Assets.load(path);
+  getTexture(path: string) {
+    const texture = Assets.get(path);
+    if (!texture) throw new Error(`Texture not found: ${path}`);
+    return texture;
   }
 }

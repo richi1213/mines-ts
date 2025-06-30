@@ -1,1 +1,74 @@
-export class GridRenderer {}
+import { GAME_CONFIG } from '@config/game-config';
+import { EventDispatcher } from '@core/event-dispatcher';
+import { Grid } from '@game/entities/grid';
+import { Assets, Container, Sprite } from 'pixi.js';
+import { type GameEvents } from 'src/types/event-types';
+
+export class GridRenderer extends Container {
+  private cellSprites: Sprite[] = [];
+
+  constructor(
+    private grid: Grid,
+    private events: EventDispatcher<GameEvents>,
+  ) {
+    super();
+    this.interactive = true;
+  }
+
+  async init(): Promise<void> {
+    const cells = this.grid.getAllCells();
+    const size = Math.sqrt(cells.length);
+    const closedTexture = Assets.get(
+      'assets/images/cells/square-logo-fill.svg',
+    );
+
+    this.cellSprites = [];
+
+    for (let row = 0; row < size; row++) {
+      for (let col = 0; col < size; col++) {
+        const sprite = new Sprite(closedTexture);
+        sprite.width = GAME_CONFIG.CELL_SIZE;
+        sprite.height = GAME_CONFIG.CELL_SIZE;
+        sprite.x = col * GAME_CONFIG.CELL_SIZE;
+        sprite.y = row * GAME_CONFIG.CELL_SIZE;
+        sprite.eventMode = 'static';
+        sprite.cursor = 'pointer';
+
+        const r = row;
+        const c = col;
+
+        sprite.on('pointertap', () => {
+          this.grid.reveal(r, c);
+        });
+
+        this.cellSprites.push(sprite);
+        this.addChild(sprite);
+      }
+    }
+
+    this.events.on('CELL_REVEALED', ({ row, col, isMine }) => {
+      this.revealCell(row, col, isMine);
+    });
+  }
+
+  private async revealCell(
+    row: number,
+    col: number,
+    isMine: boolean,
+  ): Promise<void> {
+    const index = row * Math.sqrt(this.cellSprites.length) + col;
+    const sprite = this.cellSprites[index];
+
+    const texture = isMine
+      ? Assets.get('assets/images/cells/bomb-fill.svg')
+      : Assets.get('assets/images/cells/star-fill.svg');
+
+    sprite.texture = texture;
+  }
+
+  reset(): void {
+    for (const sprite of this.cellSprites) {
+      sprite.texture = Assets.get('assets/images/cells/square-logo-fill.png');
+    }
+  }
+}

@@ -12,10 +12,20 @@ export class GameState {
     return this.currentState === state;
   }
 
-  set(state: GamePhaseType): void {
-    if (this.currentState !== state) {
-      this.currentState = state;
-    }
+  isPlaying(): boolean {
+    return this.currentState === GAME_PHASE.PLAYING;
+  }
+
+  start(): void {
+    this.currentState = GAME_PHASE.PLAYING;
+  }
+
+  gameOver(): void {
+    this.currentState = GAME_PHASE.GAME_OVER;
+  }
+
+  cashOut(): void {
+    this.currentState = GAME_PHASE.CASHED_OUT;
   }
 
   reset(): void {
