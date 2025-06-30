@@ -19,7 +19,7 @@ export class Game {
   async start() {
     await this.app.init({
       resizeTo: window,
-      backgroundColor: GAME_CONFIG.backgroundColor,
+      backgroundColor: GAME_CONFIG.BACKGROUND_COLOR,
     });
 
     const container = new Container();

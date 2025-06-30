@@ -1,8 +1,8 @@
+import { GAME_PHASE } from '@config/game-config';
 import { type GamePhaseType } from '@game/entities/types';
-import { GamePhase } from '@utils/enums';
 
 export class GameState {
-  private currentState: GamePhaseType = GamePhase.IDLE;
+  private currentState: GamePhaseType = GAME_PHASE.IDLE;
 
   get state(): GamePhaseType {
     return this.currentState;
@@ -19,6 +19,6 @@ export class GameState {
   }
 
   reset(): void {
-    this.currentState = GamePhase.IDLE;
+    this.currentState = GAME_PHASE.IDLE;
   }
 }
