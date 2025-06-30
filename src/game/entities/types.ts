@@ -1,3 +1,3 @@
-import { GamePhase } from '@utils/enums';
+import { GAME_PHASE } from '@config/game-config';
 
-export type GamePhaseType = (typeof GamePhase)[keyof typeof GamePhase];
+export type GamePhaseType = (typeof GAME_PHASE)[keyof typeof GAME_PHASE];
