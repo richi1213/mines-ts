@@ -22,7 +22,7 @@ export class Game {
 
   async start() {
     await this.app.init({
-      // resizeTo: window,
+      resizeTo: window,
       backgroundColor: GAME_CONFIG.BACKGROUND_COLOR,
     });
 
@@ -46,6 +46,14 @@ export class Game {
       multiplierCalculator,
       GAME_CONFIG.GRID_SIZE,
     );
+
+    this.uiManager = new UIManager(
+      this.eventDispatcher,
+      this.gameEngine.getGrid(),
+      multiplierCalculator,
+      bettingSystem,
+    );
+    await this.uiManager.init();
   }
 
   reset() {
