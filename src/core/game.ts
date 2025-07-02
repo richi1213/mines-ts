@@ -2,7 +2,6 @@ import { Application, Container } from 'pixi.js';
 import { GAME_CONFIG } from '@config/game-config';
 import { EventDispatcher } from '@core/event-dispatcher';
 import { AssetManager } from '@game/managers/asset-manager';
-import { GameState } from '@game/entities/game-state';
 import { GameEngine } from '@core/game-engine';
 import { RandomGenerator } from '@game/systems/random-generator';
 import type { GameEvents } from 'src/types/event-types';
@@ -13,7 +12,6 @@ export class Game {
   private app: Application;
   private assetManager!: AssetManager;
   private eventDispatcher!: EventDispatcher<GameEvents>;
-  private gameState!: GameState;
   private gameEngine!: GameEngine;
   // private uiManager!: UIManager;
 
@@ -23,7 +21,7 @@ export class Game {
 
   async start() {
     await this.app.init({
-      resizeTo: window,
+      // resizeTo: window,
       backgroundColor: GAME_CONFIG.BACKGROUND_COLOR,
     });
 
@@ -33,7 +31,6 @@ export class Game {
     // Core systems
     this.eventDispatcher = new EventDispatcher();
     this.assetManager = new AssetManager();
-    this.gameState = new GameState();
 
     await this.assetManager.loadAllAssets();
 

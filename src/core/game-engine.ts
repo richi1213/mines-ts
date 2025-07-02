@@ -4,6 +4,7 @@ import { Grid } from '@game/entities/grid';
 import { BettingSystem } from '@game/systems/betting-system';
 import { MultiplierCalculator } from '@game/systems/multiplier-calculator';
 import { RandomGenerator } from '@game/systems/random-generator';
+import { GAME_EVENT } from '@utils/enums';
 import { type GameEvents } from 'src/types/event-types';
 
 export class GameEngine {
@@ -18,7 +19,7 @@ export class GameEngine {
     private readonly gridSize: number,
   ) {
     this.gameState = new GameState();
-    this.grid = new Grid(this.gridSize, 0, this.random, this.events); // mines assigned later
+    this.grid = new Grid(this.gridSize, 0, this.random, this.events);
   }
 
   startGame(betAmount: number, mineCount: number): void {
@@ -28,8 +29,11 @@ export class GameEngine {
     this.gameState.start();
     this.grid = new Grid(this.gridSize, mineCount, this.random, this.events);
 
-    this.events.emit('BET_PLACED', { amount: betAmount, mines: mineCount });
-    this.events.emit('GAME_STARTED', undefined);
+    this.events.emit(GAME_EVENT.BET_PLACED, {
+      amount: betAmount,
+      mines: mineCount,
+    });
+    this.events.emit(GAME_EVENT.GAME_STARTED, undefined);
   }
 
   revealCell(row: number, col: number): void {
@@ -40,7 +44,7 @@ export class GameEngine {
 
     if (cell.isMine) {
       this.gameState.gameOver();
-      this.events.emit('GAME_OVER', { won: false });
+      this.events.emit(GAME_EVENT.GAME_OVER, { won: false });
     } else {
       const multiplier = this.multiplierCalculator.calculate(
         this.grid.getRevealedCount(),
@@ -65,8 +69,8 @@ export class GameEngine {
     this.bettingSystem.cashOut(winAmount);
     this.gameState.gameOver();
 
-    this.events.emit('CASHED_OUT', { winAmount });
-    this.events.emit('GAME_OVER', { won: true });
+    this.events.emit(GAME_EVENT.CASHED_OUT, { winAmount });
+    this.events.emit(GAME_EVENT.GAME_OVER, { won: true });
   }
 
   reset(): void {
