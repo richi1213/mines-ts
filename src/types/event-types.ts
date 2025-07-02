@@ -4,4 +4,5 @@ export type GameEvents = {
   GAME_STARTED: undefined;
   GAME_OVER: { won: boolean };
   CASHED_OUT: { winAmount: number };
+  POTENTIAL_WIN_UPDATED: { potentialWin: number };
 };

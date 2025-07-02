@@ -42,14 +42,11 @@ export class MinesSelector {
     onClick: () => void,
   ): Container {
     const button = new Container();
-    const bg = new Graphics()
-      .beginFill(0x333333)
-      .drawRoundedRect(0, 0, 30, 30, 4)
-      .endFill();
+    const bg = new Graphics().roundRect(0, 0, 30, 30, 4).fill(0x333333);
 
-    const text = new Text(label, {
-      fontSize: 16,
-      fill: 0xffffff,
+    const text = new Text({
+      text: label,
+      style: { fontSize: 16, fill: 0xffffff },
     });
     text.anchor.set(0.5);
     text.x = 15;

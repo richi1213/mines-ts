@@ -7,13 +7,14 @@ import { RandomGenerator } from '@game/systems/random-generator';
 import type { GameEvents } from 'src/types/event-types';
 import { BettingSystem } from '@game/systems/betting-system';
 import { MultiplierCalculator } from '@game/systems/multiplier-calculator';
+import { UIManager } from '@game/managers/ui-manager';
 
 export class Game {
   private app: Application;
   private assetManager!: AssetManager;
   private eventDispatcher!: EventDispatcher<GameEvents>;
   private gameEngine!: GameEngine;
-  // private uiManager!: UIManager;
+  private uiManager!: UIManager;
 
   constructor() {
     this.app = new Application();

@@ -51,7 +51,9 @@ export class GameEngine {
         this.bettingSystem.getMineCount(),
       );
       const potentialWin = this.bettingSystem.getBetAmount() * multiplier;
-      // Optional: emit multiplier/potential win here
+      this.events.emit(GAME_EVENT.POTENTIAL_WIN_UPDATED, {
+        potentialWin,
+      });
     }
   }
 

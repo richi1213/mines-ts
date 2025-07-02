@@ -2,6 +2,7 @@ import { type GameEvents } from 'src/types/event-types';
 import { Cell } from '@game/entities/cell';
 import { EventDispatcher } from '@core/event-dispatcher';
 import { RandomGenerator } from '@game/systems/random-generator';
+import { GAME_EVENT } from '@utils/enums';
 
 export class Grid {
   private readonly size: number;
@@ -37,6 +38,10 @@ export class Grid {
     }
   }
 
+  private index(row: number, col: number): number {
+    return row * this.size + col;
+  }
+
   reveal(row: number, col: number): void {
     const index = this.index(row, col);
     const cell = this.cells[index];
@@ -46,14 +51,14 @@ export class Grid {
     cell.reveal();
     this.revealedCount++;
 
-    this.events.emit('CELL_REVEALED', {
+    this.events.emit(GAME_EVENT.CELL_REVEALED, {
       row,
       col,
       isMine: cell.isMine,
     });
 
     if (cell.isMine) {
-      this.events.emit('GAME_OVER', { won: false });
+      this.events.emit(GAME_EVENT.GAME_OVER, { won: false });
     }
   }
 
@@ -72,9 +77,5 @@ export class Grid {
 
   getRevealedCount(): number {
     return this.revealedCount;
-  }
-
-  private index(row: number, col: number): number {
-    return row * this.size + col;
   }
 }
