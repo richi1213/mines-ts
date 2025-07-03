@@ -17,18 +17,22 @@ export class GameState {
   }
 
   start(): void {
-    this.currentState = GAME_PHASE.PLAYING;
+    this.set(GAME_PHASE.PLAYING);
   }
 
   gameOver(): void {
-    this.currentState = GAME_PHASE.GAME_OVER;
+    this.set(GAME_PHASE.GAME_OVER);
   }
 
   cashOut(): void {
-    this.currentState = GAME_PHASE.CASHED_OUT;
+    this.set(GAME_PHASE.CASHED_OUT);
   }
 
   reset(): void {
-    this.currentState = GAME_PHASE.IDLE;
+    this.set(GAME_PHASE.IDLE);
+  }
+
+  set(state: GamePhaseType): void {
+    this.currentState = state;
   }
 }

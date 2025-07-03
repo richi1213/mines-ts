@@ -1,5 +1,6 @@
 import { GAME_CONFIG } from '@config/game-config';
 import { EventDispatcher } from '@core/event-dispatcher';
+import { GameState } from '@game/entities/game-state';
 import { Grid } from '@game/entities/grid';
 import { GAME_EVENT } from '@utils/enums';
 import { Assets, Container, Sprite } from 'pixi.js';
@@ -11,14 +12,14 @@ export class GridRenderer extends Container {
   constructor(
     private grid: Grid,
     private events: EventDispatcher<GameEvents>,
+    private gameState: GameState,
   ) {
     super();
     this.interactive = true;
   }
 
   async init(): Promise<void> {
-    const cells = this.grid.getAllCells();
-    const size = Math.sqrt(cells.length);
+    const size = this.grid.size;
     const closedTexture = Assets.get('square');
 
     this.cellSprites = [];
@@ -33,11 +34,8 @@ export class GridRenderer extends Container {
         sprite.eventMode = 'static';
         sprite.cursor = 'pointer';
 
-        const r = row;
-        const c = col;
-
         sprite.on('pointertap', () => {
-          this.grid.reveal(r, c);
+          this.grid.reveal(row, col);
         });
 
         this.cellSprites.push(sprite);
@@ -55,10 +53,15 @@ export class GridRenderer extends Container {
     col: number,
     isMine: boolean,
   ): Promise<void> {
+    console.log(this.gameState.isPlaying());
+    if (this.gameState.isPlaying()) return;
+
     const index = row * Math.sqrt(this.cellSprites.length) + col;
     const sprite = this.cellSprites[index];
 
     const texture = isMine ? Assets.get('bomb') : Assets.get('star');
+
+    console.log(isMine);
 
     sprite.texture = texture;
   }

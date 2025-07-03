@@ -9,6 +9,7 @@ import { GameControls } from '@ui/components/controls/game-controls';
 import { BettingPanel } from '@ui/components/betting/betting-panel';
 import { GAME_EVENT } from '@utils/enums';
 import { type GameEvents } from 'src/types/event-types';
+import { GameState } from '@game/entities/game-state';
 
 export class UIManager {
   public container: Container = new Container();
@@ -20,10 +21,15 @@ export class UIManager {
   constructor(
     private readonly events: EventDispatcher<GameEvents>,
     private readonly grid: Grid,
+    private readonly gameState: GameState,
     private readonly multiplierCalculator: MultiplierCalculator,
     private readonly bettingSystem: BettingSystem,
   ) {
-    this.gridRenderer = new GridRenderer(this.grid, this.events);
+    this.gridRenderer = new GridRenderer(
+      this.grid,
+      this.events,
+      this.gameState,
+    );
     this.infoDisplay = new InfoDisplay();
     this.gameControls = new GameControls();
     this.bettingPanel = new BettingPanel(this.events);
@@ -43,7 +49,7 @@ export class UIManager {
     this.bettingPanel.container.y = 400;
 
     this.gameControls.container.x = 100;
-    this.gameControls.container.y = 520;
+    this.gameControls.container.y = 820;
 
     // Add to main container
     this.container.addChild(this.gridRenderer);
@@ -51,7 +57,6 @@ export class UIManager {
     this.container.addChild(this.bettingPanel.container);
     this.container.addChild(this.gameControls.container);
 
-    // Register event listeners
     this.setupEventListeners();
   }
 
@@ -80,6 +85,10 @@ export class UIManager {
     this.events.on(GAME_EVENT.GAME_STARTED, () => {
       this.infoDisplay.reset();
     });
+  }
+
+  getControls(): GameControls {
+    return this.gameControls;
   }
 
   reset(): void {

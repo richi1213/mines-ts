@@ -27,9 +27,7 @@ export class BetInput {
     this.container.addChild(minus);
 
     // "Place Bet" button
-    const placeBetBtn = this.createButton('Place Bet', 0, 40, () =>
-      this.onBet(),
-    );
+    const placeBetBtn = this.createButton('Bet', 0, 40, () => this.onBet());
     this.container.addChild(placeBetBtn);
   }
 

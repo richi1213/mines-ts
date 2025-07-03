@@ -5,10 +5,10 @@ import { RandomGenerator } from '@game/systems/random-generator';
 import { GAME_EVENT } from '@utils/enums';
 
 export class Grid {
-  private readonly size: number;
   private readonly mineCount: number;
   private cells: Cell[] = [];
   private revealedCount = 0;
+  public size: number;
 
   constructor(
     size: number,

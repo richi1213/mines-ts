@@ -8,6 +8,7 @@ import { BettingSystem } from '@game/systems/betting-system';
 import { MultiplierCalculator } from '@game/systems/multiplier-calculator';
 import { UIManager } from '@game/managers/ui-manager';
 import type { GameEvents } from 'src/types/event-types';
+import { GameState } from '@game/entities/game-state';
 
 export class Game {
   private app: Application;
@@ -15,6 +16,8 @@ export class Game {
   private eventDispatcher!: EventDispatcher<GameEvents>;
   private gameEngine!: GameEngine;
   private uiManager!: UIManager;
+  private gameState!: GameState;
+  private bettingSystem!: BettingSystem;
 
   constructor() {
     this.app = new Application();
@@ -50,10 +53,17 @@ export class Game {
     this.uiManager = new UIManager(
       this.eventDispatcher,
       this.gameEngine.getGrid(),
+      this.gameState,
       multiplierCalculator,
       bettingSystem,
     );
     await this.uiManager.init();
+
+    this.uiManager.getControls().onBet = () => {
+      const betAmount = this.bettingSystem.getBetAmount();
+      const mineCount = this.bettingSystem.getMineCount();
+      this.gameEngine.startGame(betAmount, mineCount);
+    };
 
     this.app.stage.addChild(this.uiManager.container);
   }

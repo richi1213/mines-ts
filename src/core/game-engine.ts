@@ -4,8 +4,8 @@ import { Grid } from '@game/entities/grid';
 import { BettingSystem } from '@game/systems/betting-system';
 import { MultiplierCalculator } from '@game/systems/multiplier-calculator';
 import { RandomGenerator } from '@game/systems/random-generator';
+import { GameEvents } from 'src/types/event-types';
 import { GAME_EVENT } from '@utils/enums';
-import { type GameEvents } from 'src/types/event-types';
 
 export class GameEngine {
   private grid: Grid;
