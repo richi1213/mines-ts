@@ -1,6 +1,5 @@
 import { Container } from 'pixi.js';
 import { EventDispatcher } from '@core/event-dispatcher';
-import { type GameEvents } from 'src/types/event-types';
 import { Grid } from '@game/entities/grid';
 import { MultiplierCalculator } from '@game/systems/multiplier-calculator';
 import { BettingSystem } from '@game/systems/betting-system';
@@ -9,10 +8,10 @@ import { InfoDisplay } from '@ui/components/info/info-display';
 import { GameControls } from '@ui/components/controls/game-controls';
 import { BettingPanel } from '@ui/components/betting/betting-panel';
 import { GAME_EVENT } from '@utils/enums';
+import { type GameEvents } from 'src/types/event-types';
 
 export class UIManager {
   public container: Container = new Container();
-
   private gridRenderer: GridRenderer;
   private infoDisplay: InfoDisplay;
   private gameControls: GameControls;
@@ -58,7 +57,7 @@ export class UIManager {
 
   private setupEventListeners(): void {
     this.events.on(GAME_EVENT.POTENTIAL_WIN_UPDATED, ({ potentialWin }) => {
-      // this.infoDisplay.updateMultiplier(multiplier);
+      // this.infoDisplay.updateMultiplier();
       this.infoDisplay.updatePotentialWin(potentialWin);
 
       const nextMultiplier = this.multiplierCalculator.calculate(

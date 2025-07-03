@@ -1,6 +1,7 @@
 import { GAME_CONFIG } from '@config/game-config';
 import { EventDispatcher } from '@core/event-dispatcher';
 import { Grid } from '@game/entities/grid';
+import { GAME_EVENT } from '@utils/enums';
 import { Assets, Container, Sprite } from 'pixi.js';
 import { type GameEvents } from 'src/types/event-types';
 
@@ -18,9 +19,7 @@ export class GridRenderer extends Container {
   async init(): Promise<void> {
     const cells = this.grid.getAllCells();
     const size = Math.sqrt(cells.length);
-    const closedTexture = Assets.get(
-      'assets/images/cells/square-logo-fill.svg',
-    );
+    const closedTexture = Assets.get('square');
 
     this.cellSprites = [];
 
@@ -46,7 +45,7 @@ export class GridRenderer extends Container {
       }
     }
 
-    this.events.on('CELL_REVEALED', ({ row, col, isMine }) => {
+    this.events.on(GAME_EVENT.CELL_REVEALED, ({ row, col, isMine }) => {
       this.revealCell(row, col, isMine);
     });
   }
@@ -59,16 +58,14 @@ export class GridRenderer extends Container {
     const index = row * Math.sqrt(this.cellSprites.length) + col;
     const sprite = this.cellSprites[index];
 
-    const texture = isMine
-      ? Assets.get('assets/images/cells/bomb-fill.svg')
-      : Assets.get('assets/images/cells/star-fill.svg');
+    const texture = isMine ? Assets.get('bomb') : Assets.get('star');
 
     sprite.texture = texture;
   }
 
   reset(): void {
     for (const sprite of this.cellSprites) {
-      sprite.texture = Assets.get('assets/images/cells/square-logo-fill.png');
+      sprite.texture = Assets.get('square');
     }
   }
 }
