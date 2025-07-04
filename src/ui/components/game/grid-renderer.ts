@@ -53,7 +53,7 @@ export class GridRenderer extends Container {
     col: number,
     isMine: boolean,
   ): Promise<void> {
-    // if (this.gameState.isPlaying()) return;
+    if (this.gameState.isPlaying()) return;
 
     const index = row * Math.sqrt(this.cellSprites.length) + col;
     const sprite = this.cellSprites[index];

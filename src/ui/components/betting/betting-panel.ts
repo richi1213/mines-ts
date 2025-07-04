@@ -3,6 +3,7 @@ import { EventDispatcher } from '@core/event-dispatcher';
 import { BalanceDisplay } from '@ui/components/betting/balance-display';
 import { BetInput } from '@ui/components/betting/bet-input';
 import { MinesSelector } from '@ui/components/betting/mines-selector';
+import { GAME_EVENT } from '@utils/enums';
 import { Container } from 'pixi.js';
 import { type GameEvents } from 'src/types/event-types';
 
@@ -48,7 +49,7 @@ export class BettingPanel {
     this.balance -= amount;
     this.balanceDisplay.update(this.balance);
 
-    this.events.emit('BET_PLACED', { amount, mines });
+    this.events.emit(GAME_EVENT.BET_PLACED, { amount, mines });
   };
 
   getBetAmount(): number {
