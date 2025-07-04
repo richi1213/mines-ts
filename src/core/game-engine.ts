@@ -47,12 +47,10 @@ export class GameEngine {
     this.gameState.start();
     this.grid = new Grid(this.gridSize, mineCount, this.random, this.events);
 
-    this.events.emit(GAME_EVENT.GAME_STARTED, undefined);
+    this.events.emit(GAME_EVENT.GAME_STARTED, { grid: this.grid });
   }
 
   revealCell(row: number, col: number): void {
-    if (this.gameState.isPlaying()) return;
-
     const cell = this.grid.getCell(row, col);
     if (cell.isRevealed) return;
 

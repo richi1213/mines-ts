@@ -1,5 +1,5 @@
-import { createButton } from '@utils/create-button';
 import { Container } from 'pixi.js';
+import { createButton } from '@utils/create-button';
 
 export class GameControls {
   public container: Container = new Container();
@@ -19,12 +19,12 @@ export class GameControls {
     this.container.addChild(this.betButton, this.cashOutButton);
   }
 
-  setBetDisabled(disabled: boolean): void {
+  setBetDisabled(disabled = true): void {
     this.betButton.eventMode = disabled ? 'none' : 'static';
     this.betButton.alpha = disabled ? 0.5 : 1;
   }
 
-  setCashOutDisabled(disabled: boolean): void {
+  setCashOutDisabled(disabled = true): void {
     this.cashOutButton.eventMode = disabled ? 'none' : 'static';
     this.cashOutButton.alpha = disabled ? 0.5 : 1;
   }

@@ -8,14 +8,16 @@ import { type GameEvents } from 'src/types/event-types';
 
 export class GridRenderer extends Container {
   private cellSprites: Sprite[] = [];
+  private grid!: Grid;
 
   constructor(
-    private grid: Grid,
+    grid: Grid,
     private events: EventDispatcher<GameEvents>,
     private gameState: GameState,
   ) {
     super();
     this.interactive = true;
+    this.grid = grid;
   }
 
   async init(): Promise<void> {
@@ -49,27 +51,39 @@ export class GridRenderer extends Container {
     });
 
     this.events.on(GAME_EVENT.GAME_OVER, ({ won }) => {
-      if (!won) this.revealAllMines();
+      if (!won) this.revealAllCells();
+
+      setTimeout(() => {
+        window.alert('Game over');
+      }, 500);
+    });
+
+    this.events.on(GAME_EVENT.GAME_STARTED, ({ grid }) => {
+      this.setGrid(grid);
+      this.reset();
     });
   }
 
+  private getIndex(row: number, col: number): number {
+    return row * this.grid.size + col;
+  }
+
   private revealCell(row: number, col: number, isMine: boolean): void {
-    const index = row * this.grid.size + col;
+    const index = this.getIndex(row, col);
     const sprite = this.cellSprites[index];
     const texture = isMine ? Assets.get('bomb') : Assets.get('star');
-    sprite.texture = texture;
 
+    sprite.texture = texture;
     sprite.eventMode = 'none';
     sprite.cursor = 'default';
   }
 
-  private revealAllMines(): void {
-    for (let row = 0; row < this.grid.size; row++) {
-      for (let col = 0; col < this.grid.size; col++) {
+  revealAllCells(): void {
+    const size = this.grid.size;
+    for (let row = 0; row < size; row++) {
+      for (let col = 0; col < size; col++) {
         const cell = this.grid.getCell(row, col);
-        if (cell.isMine) {
-          this.revealCell(row, col, true);
-        }
+        this.revealCell(row, col, cell.isMine);
       }
     }
   }
@@ -81,5 +95,9 @@ export class GridRenderer extends Container {
       sprite.eventMode = 'static';
       sprite.cursor = 'pointer';
     }
+  }
+
+  setGrid(grid: Grid): void {
+    this.grid = grid;
   }
 }
