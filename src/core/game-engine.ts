@@ -4,7 +4,7 @@ import { Grid } from '@game/entities/grid';
 import { BettingSystem } from '@game/systems/betting-system';
 import { MultiplierCalculator } from '@game/systems/multiplier-calculator';
 import { RandomGenerator } from '@game/systems/random-generator';
-import { GameEvents } from 'src/types/event-types';
+import { type GameEvents } from 'src/types/event-types';
 import { GAME_EVENT } from '@utils/enums';
 
 export class GameEngine {
@@ -20,7 +20,6 @@ export class GameEngine {
   ) {
     this.gameState = new GameState();
     this.grid = new Grid(this.gridSize, 0, this.random, this.events);
-
     this.setupEventListeners();
   }
 
@@ -36,6 +35,10 @@ export class GameEngine {
         console.warn('Bet failed:', (err as Error).message);
       }
     });
+
+    this.events.on(GAME_EVENT.CELL_CLICKED, ({ row, col }) => {
+      this.revealCell(row, col);
+    });
   }
 
   startGame(mineCount: number): void {
@@ -43,33 +46,41 @@ export class GameEngine {
 
     this.gameState.start();
     this.grid = new Grid(this.gridSize, mineCount, this.random, this.events);
+
     this.events.emit(GAME_EVENT.GAME_STARTED, undefined);
   }
 
   revealCell(row: number, col: number): void {
-    if (!this.gameState.isPlaying()) return;
+    if (this.gameState.isPlaying()) return;
+
+    const cell = this.grid.getCell(row, col);
+    if (cell.isRevealed) return;
 
     this.grid.reveal(row, col);
-    const cell = this.grid.getCell(row, col);
+
+    this.events.emit(GAME_EVENT.CELL_REVEALED, {
+      row,
+      col,
+      isMine: cell.isMine,
+    });
 
     if (cell.isMine) {
       this.gameState.gameOver();
       this.events.emit(GAME_EVENT.GAME_OVER, { won: false });
     } else {
+      const revealedCount = this.grid.getRevealedCount();
+      const mineCount = this.bettingSystem.getMineCount();
       const multiplier = this.multiplierCalculator.calculate(
-        this.grid.getRevealedCount(),
-        this.bettingSystem.getMineCount(),
+        revealedCount,
+        mineCount,
       );
       const potentialWin = this.bettingSystem.getBetAmount() * multiplier;
-      this.events.emit(GAME_EVENT.POTENTIAL_WIN_UPDATED, {
-        potentialWin,
-      });
+
+      this.events.emit(GAME_EVENT.POTENTIAL_WIN_UPDATED, { potentialWin });
     }
   }
 
   cashOut(): void {
-    if (!this.gameState.isPlaying()) return;
-
     const revealedCount = this.grid.getRevealedCount();
     const mineCount = this.bettingSystem.getMineCount();
     const multiplier = this.multiplierCalculator.calculate(

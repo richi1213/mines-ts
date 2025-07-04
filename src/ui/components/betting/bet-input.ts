@@ -10,6 +10,8 @@ export class BetInput {
   private maxBet: number = 9999;
 
   private betText: Text;
+  private plusButton: Container;
+  private minusButton: Container;
 
   constructor() {
     this.betText = new Text({
@@ -18,8 +20,16 @@ export class BetInput {
     });
     this.container.addChild(this.betText);
 
-    const plus = createButton('+', 70, 30, 80, 0, () => this.adjustBet(1), 14);
-    const minus = createButton(
+    this.plusButton = createButton(
+      '+',
+      70,
+      30,
+      80,
+      0,
+      () => this.adjustBet(1),
+      14,
+    );
+    this.minusButton = createButton(
       '-',
       70,
       30,
@@ -29,7 +39,7 @@ export class BetInput {
       14,
     );
 
-    this.container.addChild(plus, minus);
+    this.container.addChild(this.plusButton, this.minusButton);
   }
 
   private adjustBet(amount: number): void {
@@ -51,5 +61,16 @@ export class BetInput {
 
   reset(): void {
     this.setAmount(10);
+  }
+
+  setDisabled(disabled: boolean): void {
+    const mode = disabled ? 'none' : 'static';
+    const alpha = disabled ? 0.5 : 1;
+
+    this.plusButton.eventMode = mode;
+    this.minusButton.eventMode = mode;
+
+    this.plusButton.alpha = alpha;
+    this.minusButton.alpha = alpha;
   }
 }

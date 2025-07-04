@@ -8,6 +8,8 @@ export class MinesSelector {
   private readonly maxMines = 24;
 
   private label: Text;
+  private plusButton: Container;
+  private minusButton: Container;
 
   constructor() {
     this.label = new Text({
@@ -21,10 +23,12 @@ export class MinesSelector {
 
     this.container.addChild(this.label);
 
-    const plus = this.createButton('+', 100, 0, () => this.adjustMines(1));
-    const minus = this.createButton('-', 150, 0, () => this.adjustMines(-1));
+    this.plusButton = this.createButton('+', 100, 0, () => this.adjustMines(1));
+    this.minusButton = this.createButton('-', 150, 0, () =>
+      this.adjustMines(-1),
+    );
 
-    this.container.addChild(plus, minus);
+    this.container.addChild(this.plusButton, this.minusButton);
   }
 
   private adjustMines(amount: number): void {
@@ -73,5 +77,16 @@ export class MinesSelector {
 
   reset(): void {
     this.setCount(3);
+  }
+
+  setDisabled(disabled: boolean): void {
+    const mode = disabled ? 'none' : 'static';
+    const alpha = disabled ? 0.5 : 1;
+
+    this.plusButton.eventMode = mode;
+    this.minusButton.eventMode = mode;
+
+    this.plusButton.alpha = alpha;
+    this.minusButton.alpha = alpha;
   }
 }

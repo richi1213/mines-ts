@@ -81,7 +81,8 @@ export class UIManager {
     });
 
     this.events.on(GAME_EVENT.GAME_OVER, () => {
-      // Disable controls/reset UI here
+      window.alert('Game over');
+      this.reset();
     });
 
     this.events.on(GAME_EVENT.GAME_STARTED, () => {
@@ -97,6 +98,7 @@ export class UIManager {
         mines: mineCount,
       });
       this.gameControls.setBetDisabled(true);
+      this.bettingPanel.setDisableButtons();
     };
 
     this.gameControls.onCashOut = () => {

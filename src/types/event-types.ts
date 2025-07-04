@@ -6,4 +6,5 @@ export type GameEvents = {
   CASHED_OUT: { winAmount: number };
   POTENTIAL_WIN_UPDATED: { potentialWin: number };
   BALANCE_UPDATED: { balance: number };
+  CELL_CLICKED: { row: number; col: number };
 };

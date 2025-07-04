@@ -21,7 +21,6 @@ export class GridRenderer extends Container {
   async init(): Promise<void> {
     const size = this.grid.size;
     const closedTexture = Assets.get('square');
-
     this.cellSprites = [];
 
     for (let row = 0; row < size; row++) {
@@ -35,7 +34,9 @@ export class GridRenderer extends Container {
         sprite.cursor = 'pointer';
 
         sprite.on('pointertap', () => {
-          this.grid.reveal(row, col);
+          if (this.gameState.isPlaying()) {
+            this.events.emit(GAME_EVENT.CELL_CLICKED, { row, col });
+          }
         });
 
         this.cellSprites.push(sprite);
@@ -46,26 +47,39 @@ export class GridRenderer extends Container {
     this.events.on(GAME_EVENT.CELL_REVEALED, ({ row, col, isMine }) => {
       this.revealCell(row, col, isMine);
     });
+
+    this.events.on(GAME_EVENT.GAME_OVER, ({ won }) => {
+      if (!won) this.revealAllMines();
+    });
   }
 
-  private async revealCell(
-    row: number,
-    col: number,
-    isMine: boolean,
-  ): Promise<void> {
-    if (this.gameState.isPlaying()) return;
-
-    const index = row * Math.sqrt(this.cellSprites.length) + col;
+  private revealCell(row: number, col: number, isMine: boolean): void {
+    const index = row * this.grid.size + col;
     const sprite = this.cellSprites[index];
-
     const texture = isMine ? Assets.get('bomb') : Assets.get('star');
-
     sprite.texture = texture;
+
+    sprite.eventMode = 'none';
+    sprite.cursor = 'default';
+  }
+
+  private revealAllMines(): void {
+    for (let row = 0; row < this.grid.size; row++) {
+      for (let col = 0; col < this.grid.size; col++) {
+        const cell = this.grid.getCell(row, col);
+        if (cell.isMine) {
+          this.revealCell(row, col, true);
+        }
+      }
+    }
   }
 
   reset(): void {
+    const closedTexture = Assets.get('square');
     for (const sprite of this.cellSprites) {
-      sprite.texture = Assets.get('square');
+      sprite.texture = closedTexture;
+      sprite.eventMode = 'static';
+      sprite.cursor = 'pointer';
     }
   }
 }

@@ -49,6 +49,11 @@ export class BettingPanel {
     this.balanceDisplay.update(balance);
   }
 
+  setDisableButtons(disabled = true): void {
+    this.betInput.setDisabled(disabled);
+    this.minesSelector.setDisabled(disabled);
+  }
+
   reset(): void {
     this.betInput.reset();
     this.minesSelector.reset();
