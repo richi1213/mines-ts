@@ -61,6 +61,7 @@ export class BetInput {
 
   reset(): void {
     this.setAmount(10);
+    this.setDisabled(false);
   }
 
   setDisabled(disabled: boolean): void {

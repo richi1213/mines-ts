@@ -57,5 +57,6 @@ export class BettingPanel {
   reset(): void {
     this.betInput.reset();
     this.minesSelector.reset();
+    this.setDisableButtons(false);
   }
 }

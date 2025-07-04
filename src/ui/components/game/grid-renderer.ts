@@ -50,14 +50,6 @@ export class GridRenderer extends Container {
       this.revealCell(row, col, isMine);
     });
 
-    this.events.on(GAME_EVENT.GAME_OVER, ({ won }) => {
-      if (!won) this.revealAllCells();
-
-      setTimeout(() => {
-        window.alert('Game over');
-      }, 500);
-    });
-
     this.events.on(GAME_EVENT.GAME_STARTED, ({ grid }) => {
       this.setGrid(grid);
       this.reset();

@@ -80,9 +80,14 @@ export class UIManager {
       this.bettingPanel.updateBalance(balance);
     });
 
-    this.events.on(GAME_EVENT.GAME_OVER, () => {
-      // window.alert('Game over');
-      // this.reset();
+    this.events.on(GAME_EVENT.GAME_OVER, ({ won }) => {
+      if (!won) this.gridRenderer.revealAllCells();
+      setTimeout(() => {
+        window.alert('Game over');
+      }, 500);
+      setTimeout(() => {
+        this.reset();
+      }, 2500);
     });
 
     this.events.on(GAME_EVENT.GAME_STARTED, () => {
@@ -119,5 +124,7 @@ export class UIManager {
   reset(): void {
     this.gridRenderer.reset();
     this.infoDisplay.reset();
+    this.bettingPanel.reset();
+    this.gameControls.setBetDisabled(false);
   }
 }
