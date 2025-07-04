@@ -20,19 +20,29 @@ export class GameEngine {
   ) {
     this.gameState = new GameState();
     this.grid = new Grid(this.gridSize, 0, this.random, this.events);
+
+    this.setupEventListeners();
   }
 
-  startGame(betAmount: number, mineCount: number): void {
+  private setupEventListeners(): void {
+    this.events.on(GAME_EVENT.BET_PLACED, ({ amount, mines }) => {
+      try {
+        this.bettingSystem.placeBet(amount, mines);
+        this.startGame(mines);
+        this.events.emit(GAME_EVENT.BALANCE_UPDATED, {
+          balance: this.bettingSystem.getBalance(),
+        });
+      } catch (err) {
+        console.warn('Bet failed:', (err as Error).message);
+      }
+    });
+  }
+
+  startGame(mineCount: number): void {
     if (this.gameState.isPlaying()) return;
 
-    this.bettingSystem.placeBet(betAmount, mineCount);
     this.gameState.start();
     this.grid = new Grid(this.gridSize, mineCount, this.random, this.events);
-
-    this.events.emit(GAME_EVENT.BET_PLACED, {
-      amount: betAmount,
-      mines: mineCount,
-    });
     this.events.emit(GAME_EVENT.GAME_STARTED, undefined);
   }
 

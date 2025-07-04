@@ -76,6 +76,10 @@ export class UIManager {
       this.infoDisplay.updatePotentialWin(0);
     });
 
+    this.events.on(GAME_EVENT.BALANCE_UPDATED, ({ balance }) => {
+      this.bettingPanel.updateBalance(balance);
+    });
+
     this.events.on(GAME_EVENT.GAME_OVER, () => {
       // Disable controls/reset UI here
     });
@@ -83,6 +87,24 @@ export class UIManager {
     this.events.on(GAME_EVENT.GAME_STARTED, () => {
       this.infoDisplay.reset();
     });
+
+    this.gameControls.onBet = () => {
+      console.log('clicked bet button');
+
+      const betAmount = this.bettingPanel.getBetAmount();
+      const mineCount = this.bettingPanel.getMineCount();
+
+      this.events.emit(GAME_EVENT.BET_PLACED, {
+        amount: betAmount,
+        mines: mineCount,
+      });
+    };
+
+    this.gameControls.onCashOut = () => {
+      console.log('clicked cash out button');
+
+      // this.events.emit(GAME_EVENT.CASHED_OUT, {});
+    };
   }
 
   getControls(): GameControls {

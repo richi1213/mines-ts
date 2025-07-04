@@ -5,4 +5,5 @@ export type GameEvents = {
   GAME_OVER: { won: boolean };
   CASHED_OUT: { winAmount: number };
   POTENTIAL_WIN_UPDATED: { potentialWin: number };
+  BALANCE_UPDATED: { balance: number };
 };

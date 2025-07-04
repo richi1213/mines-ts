@@ -1,13 +1,9 @@
 import { GAME_CONFIG } from '@config/game-config';
 
 export class BettingSystem {
-  private balance: number;
+  private balance: number = GAME_CONFIG.INITIAL_BETTING_BALANCE;
   private currentBet: number = 0;
   private mineCount: number = 0;
-
-  constructor(initialBalance: number = GAME_CONFIG.INITIAL_BETTING_BALANCE) {
-    this.balance = initialBalance;
-  }
 
   placeBet(amount: number, mines: number): void {
     if (amount <= 0 || mines <= 0) {

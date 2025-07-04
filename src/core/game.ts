@@ -57,17 +57,6 @@ export class Game {
     );
     await this.uiManager.init();
 
-    this.uiManager.getControls().onBet = () => {
-      const betAmount = this.bettingSystem.getBetAmount();
-      const mineCount = this.bettingSystem.getMineCount();
-
-      this.gameEngine.startGame(betAmount, mineCount);
-    };
-
-    // this.uiManager.getControls().onCashOut = () => {
-    //   this.gameEngine.cashOut();
-    // };
-
     this.app.stage.addChild(this.uiManager.container);
   }
 
