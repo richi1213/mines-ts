@@ -8,7 +8,6 @@ import { BettingSystem } from '@game/systems/betting-system';
 import { MultiplierCalculator } from '@game/systems/multiplier-calculator';
 import { UIManager } from '@game/managers/ui-manager';
 import type { GameEvents } from 'src/types/event-types';
-import { GameState } from '@game/entities/game-state';
 
 export class Game {
   private app: Application;
@@ -16,7 +15,6 @@ export class Game {
   private eventDispatcher!: EventDispatcher<GameEvents>;
   private gameEngine!: GameEngine;
   private uiManager!: UIManager;
-  private gameState!: GameState;
   private bettingSystem!: BettingSystem;
 
   constructor() {
@@ -38,14 +36,14 @@ export class Game {
     this.assetManager = new AssetManager();
     await this.assetManager.loadAllAssets();
 
+    this.bettingSystem = new BettingSystem();
     const randomGenerator = new RandomGenerator();
-    const bettingSystem = new BettingSystem();
     const multiplierCalculator = new MultiplierCalculator();
 
     this.gameEngine = new GameEngine(
       this.eventDispatcher,
       randomGenerator,
-      bettingSystem,
+      this.bettingSystem,
       multiplierCalculator,
       GAME_CONFIG.GRID_SIZE,
     );
@@ -53,17 +51,22 @@ export class Game {
     this.uiManager = new UIManager(
       this.eventDispatcher,
       this.gameEngine.getGrid(),
-      this.gameState,
+      this.gameEngine.getGameState(),
       multiplierCalculator,
-      bettingSystem,
+      this.bettingSystem,
     );
     await this.uiManager.init();
 
     this.uiManager.getControls().onBet = () => {
       const betAmount = this.bettingSystem.getBetAmount();
       const mineCount = this.bettingSystem.getMineCount();
+
       this.gameEngine.startGame(betAmount, mineCount);
     };
+
+    // this.uiManager.getControls().onCashOut = () => {
+    //   this.gameEngine.cashOut();
+    // };
 
     this.app.stage.addChild(this.uiManager.container);
   }

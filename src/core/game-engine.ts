@@ -78,6 +78,7 @@ export class GameEngine {
   reset(): void {
     this.gameState.reset();
     this.grid.reset();
+    this.grid = new Grid(this.gridSize, 0, this.random, this.events);
   }
 
   getGrid(): Grid {

@@ -38,7 +38,6 @@ export class UIManager {
   async init(): Promise<void> {
     await this.gridRenderer.init();
 
-    // Position UI components
     this.gridRenderer.x = 100;
     this.gridRenderer.y = 100;
 
@@ -49,9 +48,8 @@ export class UIManager {
     this.bettingPanel.container.y = 400;
 
     this.gameControls.container.x = 100;
-    this.gameControls.container.y = 820;
+    this.gameControls.container.y = 550;
 
-    // Add to main container
     this.container.addChild(this.gridRenderer);
     this.container.addChild(this.infoDisplay.container);
     this.container.addChild(this.bettingPanel.container);
@@ -89,6 +87,10 @@ export class UIManager {
 
   getControls(): GameControls {
     return this.gameControls;
+  }
+
+  getBettingPanel(): BettingPanel {
+    return this.bettingPanel;
   }
 
   reset(): void {

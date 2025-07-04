@@ -2,7 +2,6 @@ import { Container, Graphics, Text } from 'pixi.js';
 
 export class GameControls {
   public container: Container = new Container();
-
   public onBet: () => void = () => {};
   public onCashOut: () => void = () => {};
 
@@ -10,20 +9,13 @@ export class GameControls {
   private cashOutButton: Container;
 
   constructor() {
-    this.betButton = this.createButton('Bet', 0, 0, () => this.onBet());
-    this.cashOutButton = this.createButton('Cash Out', 120, 0, () =>
-      this.onCashOut(),
-    );
+    this.betButton = this.createButton('Bet', 0, 0);
+    this.cashOutButton = this.createButton('Cash Out', 120, 0);
 
     this.container.addChild(this.betButton, this.cashOutButton);
   }
 
-  private createButton(
-    label: string,
-    x: number,
-    y: number,
-    onClick: () => void,
-  ): Container {
+  private createButton(label: string, x: number, y: number): Container {
     const button = new Container();
     const bg = new Graphics().roundRect(0, 0, 100, 40, 6).fill(0x444444);
 
@@ -45,7 +37,11 @@ export class GameControls {
 
     button.eventMode = 'static';
     button.cursor = 'pointer';
-    button.on('pointertap', onClick);
+
+    button.on('pointertap', () => {
+      if (label === 'Bet') this.onBet();
+      else if (label === 'Cash Out') this.onCashOut();
+    });
 
     return button;
   }

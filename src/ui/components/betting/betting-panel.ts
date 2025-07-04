@@ -51,9 +51,12 @@ export class BettingPanel {
     this.events.emit('BET_PLACED', { amount, mines });
   };
 
-  layout(width: number, height: number): void {
-    this.container.x = 30;
-    this.container.y = height - 200;
+  getBetAmount(): number {
+    return this.betInput.getAmount();
+  }
+
+  getMineCount(): number {
+    return this.minesSelector.getCount();
   }
 
   reset(): void {
