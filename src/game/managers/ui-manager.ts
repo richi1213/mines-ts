@@ -89,8 +89,6 @@ export class UIManager {
     });
 
     this.gameControls.onBet = () => {
-      console.log('clicked bet button');
-
       const betAmount = this.bettingPanel.getBetAmount();
       const mineCount = this.bettingPanel.getMineCount();
 
@@ -98,6 +96,7 @@ export class UIManager {
         amount: betAmount,
         mines: mineCount,
       });
+      this.gameControls.setBetDisabled(true);
     };
 
     this.gameControls.onCashOut = () => {

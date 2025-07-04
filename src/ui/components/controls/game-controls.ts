@@ -19,13 +19,13 @@ export class GameControls {
     this.container.addChild(this.betButton, this.cashOutButton);
   }
 
-  setDisabled(disabled: boolean): void {
-    const mode = disabled ? 'none' : 'static';
-    const alpha = disabled ? 0.5 : 1;
+  setBetDisabled(disabled = false): void {
+    this.betButton.eventMode = disabled ? 'none' : 'static';
+    this.betButton.alpha = disabled ? 0.5 : 1;
+  }
 
-    this.betButton.eventMode = mode;
-    this.cashOutButton.eventMode = mode;
-    this.betButton.alpha = alpha;
-    this.cashOutButton.alpha = alpha;
+  setCashOutDisabled(disabled = false): void {
+    this.cashOutButton.eventMode = disabled ? 'none' : 'static';
+    this.cashOutButton.alpha = disabled ? 0.5 : 1;
   }
 }
