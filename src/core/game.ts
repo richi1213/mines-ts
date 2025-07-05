@@ -58,6 +58,9 @@ export class Game {
     await this.uiManager.init();
 
     this.app.stage.addChild(this.uiManager.container);
+
+    const bounds = this.uiManager.container.getLocalBounds();
+    this.uiManager.container.x = (this.app.screen.width - bounds.width) / 2;
   }
 
   reset() {
