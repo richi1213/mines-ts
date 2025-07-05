@@ -21,8 +21,7 @@ export class BettingSystem {
 
   cashOut(winAmount: number): void {
     this.balance += winAmount;
-    this.currentBet = 0;
-    this.mineCount = 0;
+    this.reset();
   }
 
   getBalance(): number {

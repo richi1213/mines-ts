@@ -32,7 +32,10 @@ export class UIManager {
     );
     this.infoDisplay = new InfoDisplay();
     this.gameControls = new GameControls();
-    this.bettingPanel = new BettingPanel(this.events);
+    this.bettingPanel = new BettingPanel(
+      this.events,
+      bettingSystem.getBalance(),
+    );
   }
 
   async init(): Promise<void> {

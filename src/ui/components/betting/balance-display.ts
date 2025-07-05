@@ -4,9 +4,9 @@ export class BalanceDisplay {
   public container: Container = new Container();
   private text: Text;
 
-  constructor() {
+  constructor(initialBalance: number = 0) {
     this.text = new Text({
-      text: '0',
+      text: `${initialBalance}`,
       style: {
         fontFamily: 'Arial',
         fontSize: 20,

@@ -13,12 +13,15 @@ export class BettingPanel {
   private minesSelector: MinesSelector;
   private balanceDisplay: BalanceDisplay;
 
-  constructor(private readonly events: EventDispatcher<GameEvents>) {
+  constructor(
+    private readonly events: EventDispatcher<GameEvents>,
+    initialBalance: number,
+  ) {
     this.container = new Container();
 
     this.betInput = new BetInput();
     this.minesSelector = new MinesSelector();
-    this.balanceDisplay = new BalanceDisplay();
+    this.balanceDisplay = new BalanceDisplay(initialBalance);
 
     this.betInput.container.y = 0;
     this.minesSelector.container.y = 60;
