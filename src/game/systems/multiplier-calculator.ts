@@ -2,28 +2,20 @@ import { GAME_CONFIG } from '@config/game-config';
 
 export class MultiplierCalculator {
   calculate(revealedSafeCells: number, totalMines: number): number {
-    if (totalMines <= 0 || revealedSafeCells < 0) return 1;
+    const gridSize = GAME_CONFIG.GRID_SIZE;
+    const totalCells = gridSize * gridSize;
 
-    const totalCells = GAME_CONFIG.GRID_SIZE * GAME_CONFIG.GRID_SIZE;
+    if (totalMines <= 0 || revealedSafeCells < 0 || totalMines >= totalCells)
+      return 1;
+
     const safeCells = totalCells - totalMines;
+    const clampedRevealed = Math.min(revealedSafeCells, safeCells);
 
-    if (revealedSafeCells > safeCells) return 1;
-
-    const multiplier = this.computeMultiplier(
-      totalCells,
-      totalMines,
-      revealedSafeCells,
-    );
-    return parseFloat(multiplier.toFixed(2));
+    return this.computeMultiplier(totalMines, clampedRevealed);
   }
 
-  private computeMultiplier(
-    totalCells: number,
-    mineCount: number,
-    revealed: number,
-  ): number {
-    // Grows faster with fewer mines, slows with more revealed
-    const base = 1.2 + mineCount / 25;
+  private computeMultiplier(mineCount: number, revealed: number): number {
+    const base = Math.max(1.01, 1.2 + mineCount / 25);
     return Math.pow(base, revealed);
   }
 }

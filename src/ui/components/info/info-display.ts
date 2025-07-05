@@ -20,7 +20,7 @@ export class InfoDisplay {
     this.nextMultiplierText = new Text({ text: 'Next: x1.10', style });
     this.nextMultiplierText.y = 30;
 
-    this.potentialWinText = new Text({ text: '0', style });
+    this.potentialWinText = new Text({ text: '0.00', style });
     this.potentialWinText.y = 60;
 
     this.container.addChild(this.multiplierText);

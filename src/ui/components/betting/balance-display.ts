@@ -6,7 +6,7 @@ export class BalanceDisplay {
 
   constructor(initialBalance: number = 0) {
     this.text = new Text({
-      text: `${initialBalance}`,
+      text: initialBalance.toFixed(2),
       style: {
         fontFamily: 'Arial',
         fontSize: 20,
@@ -18,6 +18,6 @@ export class BalanceDisplay {
   }
 
   update(balance: number): void {
-    this.text.text = `${balance}`;
+    this.text.text = balance.toFixed(2);
   }
 }

@@ -76,7 +76,11 @@ export class UIManager {
 
     this.events.on(GAME_EVENT.CASHED_OUT, ({ winAmount }) => {
       this.bettingSystem.cashOut(winAmount);
-      this.infoDisplay.updatePotentialWin(0);
+      this.infoDisplay.reset();
+
+      this.events.emit(GAME_EVENT.BALANCE_UPDATED, {
+        balance: this.bettingSystem.getBalance(),
+      });
     });
 
     this.events.on(GAME_EVENT.BALANCE_UPDATED, ({ balance }) => {
@@ -84,13 +88,16 @@ export class UIManager {
     });
 
     this.events.on(GAME_EVENT.GAME_OVER, ({ won }) => {
-      if (!won) this.gridRenderer.revealAllCells();
-      setTimeout(() => {
-        window.alert('Game over');
-      }, 500);
+      if (!won) {
+        this.gridRenderer.revealAllCells();
+        setTimeout(() => {
+          window.alert('Game over');
+        }, 500);
+      }
+
       setTimeout(() => {
         this.reset();
-      }, 2500);
+      }, 200);
     });
 
     this.events.on(GAME_EVENT.GAME_STARTED, () => {
@@ -110,9 +117,7 @@ export class UIManager {
     };
 
     this.gameControls.onCashOut = () => {
-      console.log('clicked cash out button');
-
-      // this.events.emit(GAME_EVENT.CASHED_OUT, {});
+      this.events.emit(GAME_EVENT.CASH_OUT_REQUESTED, undefined);
     };
   }
 

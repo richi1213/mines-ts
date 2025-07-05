@@ -39,6 +39,22 @@ export class GameEngine {
     this.events.on(GAME_EVENT.CELL_CLICKED, ({ row, col }) => {
       this.revealCell(row, col);
     });
+
+    this.events.on(GAME_EVENT.CASH_OUT_REQUESTED, () => {
+      if (!this.gameState.isPlaying()) return;
+
+      const revealedCount = this.grid.getRevealedCount();
+      const mineCount = this.bettingSystem.getMineCount();
+      const multiplier = this.multiplierCalculator.calculate(
+        revealedCount,
+        mineCount,
+      );
+      const winAmount = this.bettingSystem.getBetAmount() * multiplier;
+
+      this.gameState.gameOver();
+      this.events.emit(GAME_EVENT.CASHED_OUT, { winAmount });
+      this.events.emit(GAME_EVENT.GAME_OVER, { won: true });
+    });
   }
 
   startGame(mineCount: number): void {
@@ -76,22 +92,6 @@ export class GameEngine {
 
       this.events.emit(GAME_EVENT.POTENTIAL_WIN_UPDATED, { potentialWin });
     }
-  }
-
-  cashOut(): void {
-    const revealedCount = this.grid.getRevealedCount();
-    const mineCount = this.bettingSystem.getMineCount();
-    const multiplier = this.multiplierCalculator.calculate(
-      revealedCount,
-      mineCount,
-    );
-    const winAmount = this.bettingSystem.getBetAmount() * multiplier;
-
-    this.bettingSystem.cashOut(winAmount);
-    this.gameState.gameOver();
-
-    this.events.emit(GAME_EVENT.CASHED_OUT, { winAmount });
-    this.events.emit(GAME_EVENT.GAME_OVER, { won: true });
   }
 
   reset(): void {
