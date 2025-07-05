@@ -75,10 +75,6 @@ export class MinesSelector {
     this.label.text = `Mines: ${this.minesCount}`;
   }
 
-  reset(): void {
-    this.setCount(3);
-  }
-
   setDisabled(disabled: boolean): void {
     const mode = disabled ? 'none' : 'static';
     const alpha = disabled ? 0.5 : 1;

@@ -1,8 +1,5 @@
-import { type GameEvents } from 'src/types/event-types';
 import { Cell } from '@game/entities/cell';
-import { EventDispatcher } from '@core/event-dispatcher';
 import { RandomGenerator } from '@game/systems/random-generator';
-import { GAME_EVENT } from '@utils/enums';
 
 export class Grid {
   private readonly mineCount: number;
@@ -14,7 +11,6 @@ export class Grid {
     size: number,
     mineCount: number,
     private readonly random: RandomGenerator,
-    private readonly events: EventDispatcher<GameEvents>,
   ) {
     this.size = size;
     this.mineCount = mineCount;
@@ -50,16 +46,6 @@ export class Grid {
 
     cell.reveal();
     this.revealedCount++;
-
-    this.events.emit(GAME_EVENT.CELL_REVEALED, {
-      row,
-      col,
-      isMine: cell.isMine,
-    });
-
-    if (cell.isMine) {
-      this.events.emit(GAME_EVENT.GAME_OVER, { won: false });
-    }
   }
 
   getCell(row: number, col: number): Cell {

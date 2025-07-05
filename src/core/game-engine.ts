@@ -19,7 +19,7 @@ export class GameEngine {
     private readonly gridSize: number,
   ) {
     this.gameState = new GameState();
-    this.grid = new Grid(this.gridSize, 0, this.random, this.events);
+    this.grid = new Grid(this.gridSize, 0, this.random);
     this.setupEventListeners();
   }
 
@@ -61,7 +61,7 @@ export class GameEngine {
     if (this.gameState.isPlaying()) return;
 
     this.gameState.start();
-    this.grid = new Grid(this.gridSize, mineCount, this.random, this.events);
+    this.grid = new Grid(this.gridSize, mineCount, this.random);
 
     this.events.emit(GAME_EVENT.GAME_STARTED, { grid: this.grid });
   }
@@ -97,7 +97,6 @@ export class GameEngine {
   reset(): void {
     this.gameState.reset();
     this.grid.reset();
-    this.grid = new Grid(this.gridSize, 0, this.random, this.events);
   }
 
   getGrid(): Grid {

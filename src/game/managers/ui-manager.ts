@@ -20,7 +20,7 @@ export class UIManager {
 
   constructor(
     private readonly events: EventDispatcher<GameEvents>,
-    private readonly grid: Grid,
+    private grid: Grid,
     private readonly gameState: GameState,
     private readonly multiplierCalculator: MultiplierCalculator,
     private readonly bettingSystem: BettingSystem,
@@ -63,15 +63,21 @@ export class UIManager {
 
   private setupEventListeners(): void {
     this.events.on(GAME_EVENT.POTENTIAL_WIN_UPDATED, ({ potentialWin }) => {
-      // this.infoDisplay.updateMultiplier();
-      this.infoDisplay.updatePotentialWin(potentialWin);
+      const revealedCount = this.grid.getRevealedCount();
+      const mineCount = this.bettingSystem.getMineCount();
 
+      const multiplier = this.multiplierCalculator.calculate(
+        revealedCount,
+        mineCount,
+      );
       const nextMultiplier = this.multiplierCalculator.calculate(
-        this.grid.getRevealedCount() + 1,
-        this.bettingSystem.getMineCount(),
+        revealedCount + 1,
+        mineCount,
       );
 
+      this.infoDisplay.updateMultiplier(multiplier);
       this.infoDisplay.updateNextMultiplier(nextMultiplier);
+      this.infoDisplay.updatePotentialWin(potentialWin);
     });
 
     this.events.on(GAME_EVENT.CASHED_OUT, ({ winAmount }) => {
@@ -100,8 +106,9 @@ export class UIManager {
       }, 200);
     });
 
-    this.events.on(GAME_EVENT.GAME_STARTED, () => {
-      this.infoDisplay.reset();
+    this.events.on(GAME_EVENT.GAME_STARTED, ({ grid }) => {
+      this.grid = grid;
+      this.gridRenderer.setGrid(grid);
     });
 
     this.gameControls.onBet = () => {
