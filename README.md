@@ -33,3 +33,22 @@ A simple minesweeper-inspired betting game built with TypeScript and PixiJS. The
 
 - **EventDispatcher**
   - Custom event system used to decouple logic between systems and UI.
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Run in Development Mode
+
+```bash
+npm run dev
+```
